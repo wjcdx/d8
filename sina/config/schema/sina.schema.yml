@@ -1,0 +1,13 @@
+sina.settings:
+  type: mapping
+  label: 'Sina Weibo Login'
+  mapping:
+    weibo_app_key:
+      type: string
+      label: 'App Key'
+    weibo_app_secret:
+      type: string
+      label: 'App Secret'
+    weibo_button_url:
+      type: string
+      label: 'Login Button URL'

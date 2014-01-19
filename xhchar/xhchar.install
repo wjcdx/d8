@@ -1,0 +1,50 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the xhchar module.
+ */
+
+function xhchar_schema() {
+
+	$schema['char_strike'] = array(
+		'description' => 'Stores the xhua strike informations',
+		'fields' => array(
+			'id'  => array(
+				'type' => 'serial',
+				'not null' => TRUE,
+				'description' => 'Primary Key: Unique ID.',
+			),
+			'no' => array(
+				'type' => 'int',
+				'not null' => TRUE,
+				'default' => 0,
+				'description' => "the sequence number of a strike",
+			),
+			'name' => array(
+				'type' => 'varchar',
+				'not null' => TRUE,
+				'length' => 255,
+				'default' => '',
+				'description' => "the descrite name of the strike",
+			),
+			'fid' => array(
+				'type' => 'int',
+				'not null' => TRUE,
+				'default' => 0,
+				'description' => 'the id of the strike image file',
+			),
+			'description' => array(
+				'type' => 'varchar',
+				'length' => 255,
+				'default' => '',
+				'description' => 'the description of this strike',
+			)
+		),
+		'primary key' => array('id'),
+    'indexes' => array(
+      'no'    => array('no'),
+    ),
+  );
+
+  return $schema;
+}

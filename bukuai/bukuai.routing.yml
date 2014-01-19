@@ -1,0 +1,7 @@
+bukuai.split:
+  path: '/split/{category}/{no}'
+  defaults:
+    _content: '\Drupal\bukuai\Controller\BukuaiController::splitPage'
+    _title: 'Characters Splitting and Combination'
+  requirements:
+    _permission: 'access content'

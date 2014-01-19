@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the sina module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function sina_schema() {
+  $schema['sina'] = array(
+    'description' => 'Allows users use the Weibo account login.',
+    'fields' => array(
+      'weibo_uid' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'description' => "The weibo's openid.",
+      ),
+      'access_token' => array(
+        'description' => 'The recent access token for oauth-based access.',
+        'type' => 'varchar',
+        'length' => 64,
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "The user's uid.",
+      ),
+      'binded' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "If the weibo id is binded with a native account.",
+      ),
+    ),
+    'primary key' => array('weibo_uid'),
+  );
+
+  return $schema;
+}

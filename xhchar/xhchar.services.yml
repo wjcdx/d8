@@ -1,0 +1,4 @@
+services:
+  xhchar.strike.manager:
+    class: Drupal\xhchar\StrikeManager
+    arguments: ['@database']

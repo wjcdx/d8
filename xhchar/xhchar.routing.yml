@@ -1,0 +1,31 @@
+xhchar.strike.add:
+  path: '/xhchar/strike/add'
+  defaults:
+    _form: '\Drupal\xhchar\Form\StrikeAdd'
+    _title: 'Add a Xing Hua Strike'
+  requirements:
+    _permission: 'administer xhchar strikes'
+
+xhchar.strike.update:
+  path: '/xhchar/strike/update/{id}'
+  defaults:
+    _form: '\Drupal\xhchar\Form\StrikeUpdate'
+    _title: 'Update a Xing Hua Strike'
+  requirements:
+    _permission: 'administer xhchar strikes'
+
+xhchar.strike.delete:
+  path: '/xhchar/strike/delete'
+  defaults:
+    _form: '\Drupal\xhchar\Form\StrikeDelete'
+    _title: 'Delete a Xing Hua Strike'
+  requirements:
+    _permission: 'administer xhchar strikes'
+
+api.image.upload:
+  path: '/api/image/upload'
+  defaults:
+    _controller: '\Drupal\xhchar\ImageManager::upload'
+  requirements:
+    _access: 'TRUE'
+

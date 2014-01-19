@@ -1,0 +1,31 @@
+<?php
+/**
+ * @file
+ * Module file for xhchar.
+ */
+
+/**
+ * Implements hook_menu().
+ *
+ * Provides a default page to explain what this module does.
+ */
+function xhchar_menu() {
+  return array();
+}
+
+function xhchar_theme()
+{
+  return array();
+}
+
+/**
+ * Implements hook_permission().
+ */
+function xhchar_permission() {
+  return array(
+    'administer xhchar strikes' => array(
+      'title' => t('administer xhchar strikes'),
+    ),
+  );  
+}
+

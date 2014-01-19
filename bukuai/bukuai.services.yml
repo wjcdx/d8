@@ -1,0 +1,4 @@
+services:
+  bukuai.manager:
+    class: Drupal\bukuai\BukuaiManager
+    arguments: ['@database']

@@ -1,0 +1,36 @@
+<?php
+/**
+ * @file
+ * Module file for bukuai.
+ */
+
+/**
+ * Implements hook_menu().
+ *
+ * Provides a default page to explain what this module does.
+ */
+function bukuai_menu() {
+  return array();
+}
+
+function bukuai_theme()
+{
+  return array(
+    'bukuai_split_combine'  => array(
+		'render element' => 'element',
+		'template' => 'bukuai-split-combine',
+    ),
+  );
+}
+
+function template_preprocess_bukuai_split_combine(&$variables)
+{
+	global $base_path;
+	$variables['pwd'] = $base_path . drupal_get_path('module', 'bukuai') . '/';
+	$variables['parts'] = $variables['element']['#parts'];
+	$variables['next'] = $variables['element']['#next'];
+}
+
+/**
+ * @} End of "defgroup bukuai".
+ */

@@ -1,0 +1,240 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the bukuai module.
+ */
+function bukuai_install() {
+
+	$fields = array(
+    'no'    => 1,
+    'partial'    => '樊',
+    'full'    => 1,
+    'path'    => 'chars/1.png',
+    'description'    => '樊, 姓',
+  );
+  db_insert('bukuai_node')
+    ->fields($fields)
+    ->execute();
+
+	$fields = array(
+    'no'    => 2,
+    'partial'    => '樊, 上部',
+    'full'    => 0,
+    'path'    => 'chars/2.png',
+    'description'    => '樊, 姓',
+  );
+  db_insert('bukuai_node')
+    ->fields($fields)
+    ->execute();
+
+	$fields = array(
+    'no'    => 3,
+    'partial'    => '大',
+    'full'    => 1,
+    'path'    => 'chars/3.png',
+    'description'    => '大小',
+  );
+  db_insert('bukuai_node')
+    ->fields($fields)
+    ->execute();
+
+	$fields = array(
+    'no'    => 4,
+    'partial'    => '木',
+    'full'    => 1,
+    'path'    => 'chars/4.png',
+    'description'    => '树木',
+  );
+  db_insert('bukuai_node')
+    ->fields($fields)
+    ->execute();
+
+	$fields = array(
+    'no'    => 5,
+    'partial'    => '爻',
+    'full'    => 1,
+    'path'    => 'chars/5.png',
+    'description'    => '卦爻',
+  );
+  db_insert('bukuai_node')
+    ->fields($fields)
+    ->execute();
+
+	$fields = array(
+    'no'    => 6,
+    'partial'    => '区，里面',
+    'full'    => 0,
+    'path'    => 'chars/6.png',
+    'description'    => '叉，点',
+  );
+  db_insert('bukuai_node')
+    ->fields($fields)
+    ->execute();
+
+	$fields = array(
+    'no'    => 7,
+    'partial'    => '型',
+    'full'    => 0,
+    'path'    => 'chars/7.png',
+    'description'    => '构型',
+  );
+  db_insert('bukuai_node')
+    ->fields($fields)
+    ->execute();
+
+	$fields = array(
+    'no'    => 8,
+    'partial'    => '刑',
+    'full'    => 1,
+    'path'    => 'chars/8.png',
+    'description'    => '刑法',
+  );
+  db_insert('bukuai_node')
+    ->fields($fields)
+    ->execute();
+
+	$fields = array(
+    'no'    => 9,
+    'partial'    => '土',
+    'full'    => 1,
+    'path'    => 'chars/9.png',
+    'description'    => '土地',
+  );
+  db_insert('bukuai_node')
+    ->fields($fields)
+    ->execute();
+
+	$fields = array(
+    'no'    => 10,
+    'partial'    => '开',
+    'full'    => 1,
+    'path'    => 'chars/10.png',
+    'description'    => '土地',
+  );
+  db_insert('bukuai_node')
+    ->fields($fields)
+    ->execute();
+
+	$fields = array(
+    'no'    => 11,
+    'partial'    => '利刀旁',
+    'full'    => 1,
+    'path'    => 'chars/11.png',
+    'description'    => '利刀旁',
+  );
+  db_insert('bukuai_node')
+    ->fields($fields)
+    ->execute();
+
+	$fields = array(
+    'no'    => '1',
+    'children' => '[2,3,4,5,6]',
+    'tree'     => '[2:[4,5:[6,6],4],3]',
+  );  
+  db_insert('bukuai_tree')
+    ->fields($fields)
+    ->execute();
+
+	$fields = array(
+    'no'    => '7',
+    'children' => '[8,9,10,11]',
+    'tree'     => '[8:[10,11],9]',
+  );
+  db_insert('bukuai_tree')
+    ->fields($fields)
+    ->execute();
+
+}
+
+/**
+ * Implements hook_uninstall().
+ *
+ * @ingroup bukuai
+ */
+function bukuai_uninstall() {
+}
+
+function bukuai_schema() {
+
+	$schema['bukuai_node'] = array(
+		'description' => 'Stores the bukuai single node informations',
+		'fields' => array(
+			'pid'  => array(
+				'type' => 'serial',
+				'not null' => TRUE,
+				'description' => 'Primary Key: Unique person ID.',
+			),
+			'no' => array(
+				'type' => 'int',
+				'not null' => TRUE,
+				'default' => 0,
+				'description' => "the sequence number of a char",
+			),
+			'partial' => array(
+				'type' => 'varchar',
+				'length' => 255,
+				'not null' => TRUE,
+				'default' => '',
+				'description' => 'Chinese char of the node.',
+			),
+			'full' => array(
+				'type' => 'int',
+				'not null' => TRUE,
+				'default' => 1,
+				'description' => 'is the node a full-char or just a part of a char.',
+			),
+			'path' => array(
+				'type' => 'varchar',
+				'length' => 255,
+				'not null' => TRUE,
+				'default' => '',
+				'description' => 'path to the image file of the char.',
+			),
+			'description' => array(
+				'type' => 'varchar',
+				'length' => 255,
+				'default' => '',
+				'description' => 'the description of this character',
+			)
+		),
+		'primary key' => array('pid'),
+    'indexes' => array(
+      'no'    => array('no'),
+      'partial'    => array('partial'),
+    ),
+  );
+
+	$schema['bukuai_tree'] = array(
+		'description' => 'Stores the bukuai single node informations',
+		'fields' => array(
+			'pid'  => array(
+				'type' => 'serial',
+				'not null' => TRUE,
+				'description' => 'Primary Key: Unique person ID.',
+			),
+			'no' => array(
+				'type' => 'int',
+				'not null' => TRUE,
+				'default' => 0,
+				'description' => "the sequence number of a char",
+			),
+			'children' => array(
+				'type' => 'varchar',
+				'length' => 255,
+				'default' => '',
+				'description' => 'formatted string contains all child node numbers',
+			),
+			'tree' => array(
+				'type' => 'varchar',
+				'length' => 255,
+				'default' => '',
+				'description' => 'formatted string contains the tree info of child nodes',
+			),
+		),
+		'primary key' => array('pid'),
+    'indexes' => array(
+      'no'    => array('no'),
+    ),
+  );
+  return $schema;
+}

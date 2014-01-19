@@ -1,0 +1,10 @@
+name: Bu Kuai
+type: module
+description: 'Splitting and combining partials of a char and other stuffs.'
+package: Xing Hua Characters
+version: VERSION
+core: 8.x
+dependencies:
+  - block
+files:
+  - bukuai.test
