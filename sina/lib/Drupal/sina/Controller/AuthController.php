@@ -9,6 +9,7 @@ namespace Drupal\sina\Controller;
 
 use Drupal\sina\sae\OAuthException;
 use Drupal\sina\sae\SaeTOAuthV2;
+use Drupal\sina\WeiboManager;
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -23,6 +24,13 @@ class AuthController extends ControllerBase {
    * @var \Drupal\sina\SaeTOAuthV2
    */
   protected $saeTOAuthV2;
+	
+	/**
+   * WeiboManager object.
+   *
+   * @var \Drupal\sina\WeiboManager
+   */
+  protected $weiboManager;
 
   /**
    * Constructs a ConfigFactory object.
@@ -36,6 +44,8 @@ class AuthController extends ControllerBase {
 		$key = $config->get('weibo_app_key', '');
     $secret = $config->get('weibo_app_secret', '');
 		$this->saeTOAuthV2 = new SaeTOAuthV2($key, $secret);
+
+		$this->weiboManager = \Drupal::service('sina.manager');
   }
 
   /**
@@ -47,41 +57,67 @@ class AuthController extends ControllerBase {
 		return new RedirectResponse($aurl);
 	}
 	
+	/**
+	 * Weibo OAuth callback:
+	 * 0. if no weibo_uid exist in sina table, create it.
+	 * 1. if there's no user for the weibo_uid, create it;
+	 * 2. login as the user;
+	 */
 	public function callback() {
-		global $base_url;
-		$user = $this->currentUser();
 
-    if (isset($_REQUEST['code'])) {
+		if (isset($_REQUEST['code'])) {
+
+			global $base_url;
+
 			$keys = array(
-					'code' => $_REQUEST['code'],
-					'redirect_uri' => $base_url . '/weibo/callback',
+				'code' => $_REQUEST['code'],
+				'redirect_uri' => $base_url . '/weibo/callback',
 			);
+
 			try {
-					$token = $this->saeTOAuthV2->getAccessToken('code', $keys);
-					$_SESSION['weibo_token'] = $token;
+				$token = $this->saeTOAuthV2->getAccessToken('code', $keys);
+				$_SESSION['weibo_token'] = $token;
 			} catch (OAuthException $e) {
 			}
 
-			if ($_SESSION['weibo_token']['access_token']) {
-					// Find an existing user.
-					$result = db_select('sina')
-							->fields('sina')
-							->condition('weibo_uid', $_SESSION['weibo_token']['uid'])
-							->execute()
-							->fetchObject();
+			$access_token = $_SESSION['weibo_token']['access_token'];
+			if (isset($access_token)) {
+				// Find an existing user.
+				$wid = $_SESSION['weibo_token']['uid']);
+				$wba = $manager->findByWid($wid);
+				
+				// user not existed
+				// 1. create a user;
+				// 2. create a weibo user in sina table;
+				if (empty($wba)) {
+					$values = array(
+						'name' => $wid,
+					);
+					$user = entity_create('user', $values);
+					$user->setPassword($access_token);
+					$user->active();
+					$user->save();
 
-					if (isset($result->uid) && $result->uid > 0) {
-							$form_state['uid'] = $result->uid;
-							user_login_submit(array(), $form_state);
-							return $this->redirect('user.page');
-					}
-					else {
-							return $this->redirect('sina.bind_new');
-					}
-					//return '<pre>'. check_plain(print_r($_SESSION['weibo_token'], 1)) .'</pre>';
+					$uid = $user->id();
+					$account = array(
+						'uid' => $uid,
+						'weibo_uid' => $wid,
+						'access_token' => $access_token,
+						'binded' => 0,
+					);
+					$manager->add($account);
+
+					drupal_set_message($this->t('User added for %name, please reset the password at %link.',
+						array(
+							'%name' => $wid,
+							'%link' => l('Reset the Password', 'user/' . $uid . '/edit'),
+						)), 'notice');
+				}
+
+				// 3. login as the user;
+				user_login_finalize($user);
 			}
 		}
-		drupal_set_message($this->t('Sina Login failed.'), 'warning');
 		return $this->redirect('<front>');
 	}
 

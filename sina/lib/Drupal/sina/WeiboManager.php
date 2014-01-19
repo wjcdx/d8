@@ -36,6 +36,16 @@ class WeiboManager {
 		return reset($wba);
 	}
 
+	public function findByWid($wid) {
+		// Read all fields from the table.
+		$query = $this->connection->select(self::$DB_TABLE, 't');
+		$query->fields('t');
+		$query->condition("weibo_uid", $wid);
+
+		$wba = $query->execute()->fetchAll();
+		return reset($wba);
+	}
+
 	public function findAll() {
 		// Read all fields from the table.
 		$query = $this->connection->select(self::$DB_TABLE, 't');
@@ -97,13 +107,6 @@ class WeiboManager {
 		} else {
 			$this->update($account);
 		}
-	}
-
-	// weibo oauth callback:
-	// 0. if no weibo_uid exist in sina table, create it.
-	// 1. if there's no user for the weibo_uid, create it;
-	// 2. login as the user;
-	public function login($account) {
 	}
 
 }
