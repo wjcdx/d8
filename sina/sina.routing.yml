@@ -20,17 +20,3 @@ sina.callback:
   requirements:
     _access: 'TRUE'
 
-sina.bind_new:
-  path: '/sina/bind/new'
-  defaults:
-    _controller: '\Drupal\sina\Controller\BindController::bindNew'
-  requirements:
-    _permission: 'TRUE'
-
-sina.bind_exist:
-  path: '/sina/bind/exist'
-  defaults:
-    _controller: '\Drupal\sina\Controller\BindController::bindExist'
-  requirements:
-    _permission: 'TRUE'
-
