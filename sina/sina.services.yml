@@ -1,0 +1,4 @@
+services:
+  sina.manager:
+    class: Drupal\sina\WeiboManager
+    arguments: ['@database']

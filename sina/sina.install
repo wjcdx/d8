@@ -5,6 +5,19 @@
  * Install, update and uninstall functions for the sina module.
  */
 
+function sina_install()
+{
+	$fields = array(
+    'uid'    => 3,
+    'weibo_uid'    => 'xhua',
+    'access_token'    => 'sample-access-token',
+    'binded'    => 1,
+  );  
+  db_insert('sina')
+    ->fields($fields)
+    ->execute();
+}
+
 /**
  * Implements hook_schema().
  */
@@ -12,6 +25,13 @@ function sina_schema() {
   $schema['sina'] = array(
     'description' => 'Allows users use the Weibo account login.',
     'fields' => array(
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "The user's uid.",
+      ),
       'weibo_uid' => array(
         'type' => 'varchar',
         'length' => 255,
@@ -22,13 +42,6 @@ function sina_schema() {
         'type' => 'varchar',
         'length' => 64,
       ),
-      'uid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => "The user's uid.",
-      ),
       'binded' => array(
         'type' => 'int',
         'unsigned' => TRUE,
@@ -37,7 +50,10 @@ function sina_schema() {
         'description' => "If the weibo id is binded with a native account.",
       ),
     ),
-    'primary key' => array('weibo_uid'),
+    'primary key' => array('uid'),
+    'unique keys' => array(
+      'weibo_uid' => array('weibo_uid'),
+    ),
   );
 
   return $schema;

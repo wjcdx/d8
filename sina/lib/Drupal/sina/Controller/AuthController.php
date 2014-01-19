@@ -7,8 +7,8 @@
 
 namespace Drupal\sina\Controller;
 
-use Drupal\sina\OAuthException;
-use Drupal\sina\SaeTOAuthV2;
+use Drupal\sina\sae\OAuthException;
+use Drupal\sina\sae\SaeTOAuthV2;
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 

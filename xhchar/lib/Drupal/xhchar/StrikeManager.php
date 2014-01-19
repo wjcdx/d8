@@ -32,7 +32,7 @@ class StrikeManager {
 		$query->fields('t');
 		$query->condition("id", $id);
 
-		return $query->execute();
+		return $query->execute()->fetchAll();
 	}
 
 	public function findByNo($no) {
@@ -41,7 +41,7 @@ class StrikeManager {
 		$query->fields('t');
 		$query->condition("no", $no);
 
-		return $query->execute();
+		return $query->execute()->fetchAll();
 	}
 
 	public function findAll() {
@@ -49,7 +49,7 @@ class StrikeManager {
 		$query = $this->connection->select(self::$DB_TABLE, 't');
 		$query->fields('t');
 
-		return $query->execute();
+		return $query->execute()->fetchAll();
 	}
 
 	public function add($strike) {
