@@ -41,9 +41,9 @@ class AuthController extends ControllerBase {
 	public function __construct() {
 		$config = $this->config('sina.settings');
 		
-		$key = $config->get('weibo_app_key', '');
-    $secret = $config->get('weibo_app_secret', '');
-		$this->saeTOAuthV2 = new SaeTOAuthV2($key, $secret);
+		//$key = $config->get('weibo_app_key', '');
+    //$secret = $config->get('weibo_app_secret', '');
+		//$this->saeTOAuthV2 = new SaeTOAuthV2($key, $secret);
 
 		$this->weiboManager = \Drupal::service('sina.manager');
   }
@@ -53,8 +53,9 @@ class AuthController extends ControllerBase {
    */
 	public function response() {
 		global $base_url;
-    $aurl = $this->saeTOAuthV2->getAuthorizeURL($base_url . '/sina/callback');
-		return new RedirectResponse($aurl);
+    //$aurl = $this->saeTOAuthV2->getAuthorizeURL($base_url . '/sina/callback');
+		//return new RedirectResponse($aurl);
+		return $this->redirect('sina.callback');
 	}
 	
 	/**
@@ -65,6 +66,7 @@ class AuthController extends ControllerBase {
 	 */
 	public function callback() {
 
+		$_REQUEST['code'] = 'request_code';
 		if (isset($_REQUEST['code'])) {
 
 			global $base_url;
@@ -75,16 +77,20 @@ class AuthController extends ControllerBase {
 			);
 
 			try {
-				$token = $this->saeTOAuthV2->getAccessToken('code', $keys);
-				$_SESSION['weibo_token'] = $token;
+				//$token = $this->saeTOAuthV2->getAccessToken('code', $keys);
+				//$_SESSION['weibo_token'] = $token;
 			} catch (OAuthException $e) {
 			}
 
-			$access_token = $_SESSION['weibo_token']['access_token'];
+			//$access_token = $_SESSION['weibo_token']['access_token'];
+			$access_token = 'abcdef-access-token';
 			if (isset($access_token)) {
+				$user = drupal_anonymous_user();
 				// Find an existing user.
-				$wid = $_SESSION['weibo_token']['uid']);
-				$wba = $manager->findByWid($wid);
+				//$wid = $_SESSION['weibo_token']['uid']);
+				$wid = 'weibo_uid';
+				$sync = 0;
+				$wba = $this->weiboManager->findByWid($wid);
 				
 				// user not existed
 				// 1. create a user;
@@ -95,7 +101,8 @@ class AuthController extends ControllerBase {
 					);
 					$user = entity_create('user', $values);
 					$user->setPassword($access_token);
-					$user->active();
+					$user->setEmail('wjcdx@qq.com');
+					$user->activate();
 					$user->save();
 
 					$uid = $user->id();
@@ -103,15 +110,18 @@ class AuthController extends ControllerBase {
 						'uid' => $uid,
 						'weibo_uid' => $wid,
 						'access_token' => $access_token,
-						'binded' => 0,
+						'sync' => 0,
 					);
-					$manager->add($account);
+					$this->weiboManager->add($account);
 
-					drupal_set_message($this->t('User added for %name, please reset the password at %link.',
-						array(
-							'%name' => $wid,
-							'%link' => l('Reset the Password', 'user/' . $uid . '/edit'),
-						)), 'notice');
+				} else {
+					$sync = $wba->sync;
+					$user = user_load($wba->uid);
+				}
+
+				if ($sync == 0) {
+					drupal_set_message(t('You are logged in with a Sina Weibo Account %user. <a href="!user_reset">Reset your password.</a>',
+						array('%user' => $user->getUsername(), '!user_reset' => url('user/password'))));
 				}
 
 				// 3. login as the user;

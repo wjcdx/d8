@@ -68,7 +68,7 @@ function sina_form_user_login_form_alter(&$form, $form_state) {
 	$img = \Drupal::config('sina.settings')->get('weibo_button_url', 'http://www.sinaimg.cn/blog/developer/wiki/240.png');
 	$form['weibo_login'] = array(
 		'#type' => 'item',
-		'#description' => l(theme('image', array('path' => $img)), 'sina/response', array('html' => TRUE)),
+		'#description' => l(theme('image', array('uri' => $img)), 'sina/response', array('html' => TRUE)),
 	);
 }
 
@@ -92,6 +92,12 @@ function sina_user_view($account) {
 			'#type' => 'item',
 			'#title' => t('Weibo account'),
 			'#markup' => $wid,
+		);
+		
+		$account->content['email'] = array(
+			'#type' => 'item',
+			'#title' => t('Email'),
+			'#markup' => $account->getEmail(),
 		);
 	}
 }

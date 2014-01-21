@@ -11,7 +11,7 @@ function sina_install()
     'uid'    => 3,
     'weibo_uid'    => 'xhua',
     'access_token'    => 'sample-access-token',
-    'binded'    => 1,
+    'sync'    => 1,
   );  
   db_insert('sina')
     ->fields($fields)
@@ -42,12 +42,12 @@ function sina_schema() {
         'type' => 'varchar',
         'length' => 64,
       ),
-      'binded' => array(
+      'sync' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => "If the weibo id is binded with a native account.",
+        'description' => "If the weibo id is sync with a native account.",
       ),
     ),
     'primary key' => array('uid'),

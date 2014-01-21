@@ -66,7 +66,7 @@ class WeiboManager {
 			array(
 				'weibo_uid' => $account['weibo_uid'],
 				'access_token' => $account['access_token'],
-				'binded' => $account['binded'],
+				'sync' => $account['sync'],
 			)
 		);
 
@@ -98,7 +98,7 @@ class WeiboManager {
 			'uid' => $uid,
 			'weibo_uid' => $wid,
 			'access_token' => '',
-			'binded' => 1,
+			'sync' => 1,
 		);
 
 		$wba = $this->findByUid($uid);

@@ -1,5 +1,7 @@
 <?php
 
+namespace Drupal\sina\sae;
+
 /**
  * 新浪微博操作类V2
  *

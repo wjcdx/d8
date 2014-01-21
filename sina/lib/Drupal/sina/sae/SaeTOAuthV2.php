@@ -5,7 +5,7 @@
  * @author Elmer Zhang <freeboy6716@gmail.com>
  */
 
-namespace Drupal\sina;
+namespace Drupal\sina\sae;
 
 /**
  * 新浪微博 OAuth 认证类(OAuth2)

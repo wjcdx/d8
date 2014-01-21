@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\sina;
+namespace Drupal\sina\sae;
 
 
 /**
